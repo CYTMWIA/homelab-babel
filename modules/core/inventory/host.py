@@ -1,0 +1,81 @@
+from modules.core.inventory.group import Group
+
+
+from fabric import Config, Connection
+
+HOSTS_STACK = []
+
+
+class Host:
+    def __init__(self, name: str, host_vars: dict, groups: list[Group]) -> None:
+        self.name = name
+        self.vars = host_vars
+        self.groups = groups
+
+        self._connection = None
+
+    def in_group(self, name: str):
+        for g in self.groups:
+            if g.name == name:
+                return True
+        return False
+
+    def get_var(self, name: str):
+        v = self.vars.get(name, None)
+        gi = iter(self.groups)
+        while v is None:
+            g = next(gi, None)
+            if g is None:
+                break
+            v = g.get_var(name)
+        return v
+
+    def _get_var_with_prefix_maybe(self, name: str, prefix: str):
+        v = self.get_var(name)
+        if v is None:
+            v = self.get_var(prefix + name)
+        return v
+
+    def _create_connection(self):
+        ssh_host = self._get_var_with_prefix_maybe("ssh_host", "ansible_")
+        ssh_user = self._get_var_with_prefix_maybe("ssh_user", "ansible_")
+        sudo_pass = self._get_var_with_prefix_maybe("sudo_pass", "ansible_")
+        self._connection = Connection(
+            host=ssh_host,
+            user=ssh_user,
+            config=Config(
+                {
+                    "sudo": {
+                        "password": sudo_pass,
+                    },
+                }
+            ),
+        )
+
+    def connection(self) -> Connection:
+        if self._connection is None:
+            self._create_connection()
+        return self._connection
+
+    def __enter__(self):
+        HOSTS_STACK.append(self)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        HOSTS_STACK.pop()
+
+
+def current_host():
+    # TODO: 多线程支持
+    if len(HOSTS_STACK):
+        return HOSTS_STACK[-1]
+    return None
+
+
+def auto_host(func):
+    def warpper(**kwargs):
+        h = current_host()
+        if h is not None:
+            kwargs.setdefault("host", h)
+        return func(**kwargs)
+
+    return warpper

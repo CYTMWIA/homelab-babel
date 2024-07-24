@@ -1,11 +1,12 @@
 import os
 
-from fabric import Connection, Config
-
-from .path import ls
-from .vault import FileSecret
-
 from ansible.parsing.yaml.loader import AnsibleLoader
+
+from modules.core.inventory.group import Group
+from modules.core.inventory.host import Host
+
+from ..path import ls
+from ..vault import FileSecret
 
 YAML_EXTS = [".yaml", ".yml"]
 
@@ -29,71 +30,6 @@ def _load_yaml(path: str, file_name=None, vault_secrets=None):
             loader.dispose()
         except AttributeError:
             pass  # older versions of yaml don't have dispose function, ignore
-
-
-class Group:
-    def __init__(self, name: str, group_vars: dict) -> None:
-        self.name = name
-        self.vars = dict() if group_vars is None else group_vars
-
-    def members(self):
-        return self.vars.get("members", list())
-
-    def get_var(self, name: str):
-        v = self.vars.get(name, None)
-        return v
-
-
-class Host:
-    def __init__(self, name: str, host_vars: dict, groups: list[Group]) -> None:
-        self.name = name
-        self.vars = host_vars
-        self.groups = groups
-
-        self._connection = None
-
-    def in_group(self, name: str):
-        for g in self.groups:
-            if g.name == name:
-                return True
-        return False
-
-    def get_var(self, name: str):
-        v = self.vars.get(name, None)
-        gi = iter(self.groups)
-        while v is None:
-            g = next(gi, None)
-            if g is None:
-                break
-            v = g.get_var(name)
-        return v
-
-    def _get_var_with_prefix_maybe(self, name: str, prefix: str):
-        v = self.get_var(name)
-        if v is None:
-            v = self.get_var(prefix + name)
-        return v
-
-    def _create_connection(self):
-        ssh_host = self._get_var_with_prefix_maybe("ssh_host", "ansible_")
-        ssh_user = self._get_var_with_prefix_maybe("ssh_user", "ansible_")
-        sudo_pass = self._get_var_with_prefix_maybe("sudo_pass", "ansible_")
-        self._connection = Connection(
-            host=ssh_host,
-            user=ssh_user,
-            config=Config(
-                {
-                    "sudo": {
-                        "password": sudo_pass,
-                    },
-                }
-            ),
-        )
-
-    def connection(self) -> Connection:
-        if self._connection is None:
-            self._create_connection()
-        return self._connection
 
 
 class Inventory:
