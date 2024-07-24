@@ -1,7 +1,7 @@
 from modules.core.inventory.group import Group
 
 
-from fabric import Config, Connection
+from fabric import Config, Connection, Result
 
 HOSTS_STACK = []
 
@@ -56,6 +56,24 @@ class Host:
         if self._connection is None:
             self._create_connection()
         return self._connection
+
+    def _command(self, func_name: str, cmd: str, **kwargs):
+        kwargs.setdefault("hide", True)  # 隐藏输出
+
+        print(f"[{self.name}] {func_name}: {cmd}")
+
+        func = getattr(self.connection(), func_name)
+        res: None | Result = func(cmd, **kwargs)
+
+        if res is None:
+            raise Exception("run() returned None")
+        return res
+
+    def run(self, cmd: str, **kwargs):
+        return self._command("run", cmd, **kwargs)
+
+    def sudo(self, cmd: str, **kwargs):
+        return self._command("sudo", cmd, **kwargs)
 
     def __enter__(self):
         HOSTS_STACK.append(self)
