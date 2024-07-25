@@ -9,3 +9,9 @@ class Group:
     def get_var(self, name: str):
         v = self.vars.get(name, None)
         return v
+
+    def __str__(self) -> str:
+        return f"<Group {self.name}>"
+
+    def __repr__(self) -> str:
+        return str(self)

@@ -46,6 +46,7 @@ class Inventory:
         group_paths = ls(self.groups_dir)
         for gp in group_paths:
             name, ext = os.path.splitext(gp)
+            name = os.path.basename(name)
             try:
                 group_vars = _load_yaml(gp)
                 groups.append(Group(name, group_vars))

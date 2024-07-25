@@ -57,16 +57,20 @@ class Host:
             self._create_connection()
         return self._connection
 
-    def _command(self, func_name: str, cmd: str, **kwargs):
+    def _command(self, func_name: str, cmd: str, raise_for_failure=True, **kwargs):
         kwargs.setdefault("hide", True)  # 隐藏输出
+        kwargs.setdefault("warn", True)  # 错误时仅警告
 
         print(f"[{self.name}] {func_name}: {cmd}")
 
         func = getattr(self.connection(), func_name)
         res: None | Result = func(cmd, **kwargs)
-
         if res is None:
             raise Exception("run() returned None")
+
+        if raise_for_failure and res.failed:
+            raise Exception(f"{func_name} fail: {res}")
+
         return res
 
     def run(self, cmd: str, **kwargs):
