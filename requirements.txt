@@ -2,3 +2,4 @@ fabric
 jinja2
 pyyaml
 ansible-core
+colorama
