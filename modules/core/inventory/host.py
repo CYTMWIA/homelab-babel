@@ -1,9 +1,11 @@
-from modules.core.inventory.group import Group
-
-
+from colorama import Fore, Style
 from fabric import Config, Connection, Result
 
+from modules.core.inventory.group import Group
+
 HOSTS_STACK = []
+
+OPS_STACK = []
 
 
 class Host:
@@ -61,7 +63,7 @@ class Host:
         kwargs.setdefault("hide", True)  # 隐藏输出
         kwargs.setdefault("warn", True)  # 错误时仅警告
 
-        print(f"[{self.name}] {func_name}: {cmd}")
+        print(f"{func_name}: {cmd}")
 
         func = getattr(self.connection(), func_name)
         res: None | Result = func(cmd, **kwargs)
@@ -93,11 +95,31 @@ def current_host():
     return None
 
 
-def auto_host(func):
+def get_operation_name(func):
+    name = f"{func.__module__}.{func.__name__}"
+    name = name.removeprefix("modules.")
+    return name
+
+
+def print_color(s):
+    print(f"{Fore.CYAN}{s}{Style.RESET_ALL}")
+
+
+def operation(func):
     def warpper(**kwargs):
         h = current_host()
         if h is not None:
             kwargs.setdefault("host", h)
-        return func(**kwargs)
+
+        OPS_STACK.append(get_operation_name(func))
+        print_color(f"{kwargs["host"].name} {'>'*len(OPS_STACK)} {OPS_STACK[-1]}")
+
+        res = func(**kwargs)
+
+        OPS_STACK.pop()
+        if len(OPS_STACK):
+            print_color(f"{kwargs["host"].name} {'>'*len(OPS_STACK)} {OPS_STACK[-1]}")
+
+        return res
 
     return warpper

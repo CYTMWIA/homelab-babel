@@ -1,1 +1,1 @@
-from .inventory import host, Host, auto_host  # noqa: F401
+from .inventory import host, Host, operation  # noqa: F401
