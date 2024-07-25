@@ -1,7 +1,7 @@
-from modules.core import Host, auto_host
+from modules.core import Host, operation
 
 
-@auto_host
+@operation
 def get_ip(host: Host):
     res = host.run("ip --brief address show")
     if res.failed:

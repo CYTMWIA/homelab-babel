@@ -1,8 +1,8 @@
-from modules.core import Host, auto_host
+from modules.core import Host, operation
 from modules.package_manager import pacman
 
 
-@auto_host
+@operation
 def setup(host: Host):
     if is_installed():
         print("yay already installed")
@@ -28,7 +28,7 @@ def setup(host: Host):
     host.sudo(f"rm -f {sudo_cfg}")
 
 
-@auto_host
+@operation
 def is_installed(host: Host):
     which = host.run("which yay", raise_for_failure=False)
     return bool(len(which.stdout.strip()))

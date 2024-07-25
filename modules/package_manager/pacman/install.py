@@ -1,8 +1,8 @@
-from modules.core import Host, auto_host
+from modules.core import Host, operation
 from .setup import setup
 
 
-@auto_host
+@operation
 def install(host: Host, packages: str | list[str]):
     setup()
 

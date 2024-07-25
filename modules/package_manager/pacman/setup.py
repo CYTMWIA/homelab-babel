@@ -1,4 +1,4 @@
-from modules.core import Host, auto_host
+from modules.core import Host, operation
 
 
 ALREADY_SETUP = set()
@@ -8,7 +8,7 @@ MIRRORS = {
 }
 
 
-@auto_host
+@operation
 def setup(host: Host):
     if host.name in ALREADY_SETUP:
         return
@@ -19,7 +19,7 @@ def setup(host: Host):
     ALREADY_SETUP.add(host.name)
 
 
-@auto_host
+@operation
 def use_mirror(host: Host, url: str):
     mirrorlist_path = "/etc/pacman.d/mirrorlist"
     mirrorlist = host.sudo(f"cat {mirrorlist_path}").stdout.splitlines()
