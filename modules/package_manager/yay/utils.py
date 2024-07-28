@@ -12,7 +12,7 @@ def sudo_pacman_disable_password(host: Host):
     # Cannot echo "hello" > x.txt even with sudo? - Ask Ubuntu
     # https://askubuntu.com/questions/103643/cannot-echo-hello-x-txt-even-with-sudo
     # The redirection is done by the shell before sudo is even started.
-    host.sudo(f"bash -c 'echo \"ALL ALL=NOPASSWD: {pacman_path}\" > {SUDO_CFG}'")
+    host.sudo(f"echo \"ALL ALL=NOPASSWD: {pacman_path}\" > {SUDO_CFG}")
 
 
 @operation
