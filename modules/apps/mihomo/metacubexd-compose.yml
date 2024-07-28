@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  metacubexd:
+    container_name: {{container_name}}
+    image: ghcr.io/metacubex/metacubexd
+    restart: unless-stopped
+    ports:
+      - {{webui_addr}}:80
