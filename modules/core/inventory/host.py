@@ -79,6 +79,7 @@ class Host:
         return self._command("run", cmd, **kwargs)
 
     def sudo(self, cmd: str, **kwargs):
+        cmd = f"bash -c '{cmd}'"
         return self._command("sudo", cmd, **kwargs)
 
     def __enter__(self):
