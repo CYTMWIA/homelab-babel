@@ -35,6 +35,6 @@ def use_mirror(host: Host, url: str):
         # 转义
         url = url.replace("/", "\\/").replace(".", "\\.").replace("$", "\\$")
         # 插入镜像链接到文件头部
-        host.sudo(f"sed -i '1s/^/Server = {url}\\n/' {mirrorlist_path}")
+        host.sudo(f"sed -i \"1s/^/Server = {url}\\n/\" {mirrorlist_path}")
         # 更新缓存
         host.sudo("pacman -Syyu")
