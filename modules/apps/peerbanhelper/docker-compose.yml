@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  peerbanhelper:
+    # https://github.com/PBH-BTN/PeerBanHelper/releases/latest
+    image: registry.cn-hangzhou.aliyuncs.com/ghostchu/peerbanhelper:v5.1.0
+    restart: unless-stopped
+    container_name: {{container_name}}
+    volumes:
+       {% if data_dir is not none %}- {{data_dir}}:/app/data{% endif %}
+    ports:
+      - {{webui_addr}}:9898
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Shanghai
