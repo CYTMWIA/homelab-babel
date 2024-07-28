@@ -28,19 +28,23 @@ def setup(host: Host):
             state=ServiceState.ENABLE | ServiceState.START,
         )
 
-    this_dir = os.path.dirname(__file__)
-    fs.directory(path="/etc/docker/", state=fs.DirectoryState.EXISTS)
-    template(
-        local_template_path=os.path.join(this_dir, "daemon.json"),
-        remote_dest_path="/etc/docker/daemon.json",
-        template_vars={
-            "docker_http_proxy": host.get_var("docker_http_proxy"),
-        },
-    )
-    service(
-        service="docker.service",
-        state=ServiceState.RESTART,
-    )
+    docker_http_proxy = host.get_var("docker_http_proxy")
+    if docker_http_proxy is not None:
+        # TODO: 检查是否已设置代理
+        print("Set proxy for docker:", docker_http_proxy)
+        this_dir = os.path.dirname(__file__)
+        fs.directory(path="/etc/docker/", state=fs.DirectoryState.EXISTS)
+        template(
+            local_template_path=os.path.join(this_dir, "daemon.json"),
+            remote_dest_path="/etc/docker/daemon.json",
+            template_vars={
+                "docker_http_proxy": docker_http_proxy,
+            },
+        )
+        service(
+            service="docker.service",
+            state=ServiceState.RESTART,
+        )
 
 
 @operation
@@ -56,6 +60,7 @@ def run(host: Host, image: str, name: str, args: None | list[str] = None):
 def compose_up(host: Host, path: str):
     setup()
     host.sudo(f"cd {path} && docker compose up -d")
+
 
 @operation
 def logs(host: Host, container: str):
