@@ -43,6 +43,10 @@ def directory(
 
 @operation
 def is_dir_exists(host: Host, path: str):
+    # dirname("/aaa/bbb/") will return "/aaa/bbb", which we don't want
+    # so we have to remove endding "/" in the path
+    path = path.removesuffix("/")
+
     ls_output = host.sudo(f"ls -l -L '{os.path.dirname(path)}'").stdout.splitlines()
     basename = os.path.basename(path)
     for line in ls_output:
