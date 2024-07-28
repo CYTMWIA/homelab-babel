@@ -1,6 +1,6 @@
 import os
 
-from modules.apps import docker
+from modules import docker
 from modules.core import Host, operation
 from modules.fs import DirectoryState, directory
 from modules.template import template
