@@ -1,0 +1,20 @@
+---
+services:
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: {{container_name}}
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Shanghai
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      {% if dir_config is not none %}- {{dir_config}}:/config{% endif %}
+      {% if dir_downloads is not none %}- {{dir_downloads}}:/downloads{% endif %}
+      {% if dir_watch is not none %}- {{dir_watch}}:/watch{% endif %}
+    ports:
+      - {{webui_addr}}:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
