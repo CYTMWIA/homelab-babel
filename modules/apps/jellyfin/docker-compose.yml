@@ -1,0 +1,11 @@
+version: '3.5'
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: {{container_name}}
+    volumes:
+      {% if dir_config is not none %}- {{dir_config}}:/config{% endif %}
+      {% if dir_media is not none %}- {{dir_media}}:/media:ro{% endif %}
+    ports:
+      - {{webui_addr}}:8096
+    restart: 'unless-stopped'
