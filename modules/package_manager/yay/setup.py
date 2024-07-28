@@ -17,7 +17,7 @@ def setup(host: Host):
     sudo_pacman_disable_password()
 
     # 运行到最后会调用 sudo，所以提前修改 sudoers 文件
-    host.run("cd yay-bin && makepkg -si")
+    host.run("cd yay-bin && makepkg -si --noconfirm")
 
     sudo_pacman_enable_password()
 
