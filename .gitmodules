@@ -1,0 +1,3 @@
+[submodule "iapyc"]
+	path = iapyc
+	url = git@github.com:CYTMWIA/iapyc.git
