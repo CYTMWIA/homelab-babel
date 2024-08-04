@@ -1,3 +1,3 @@
 [submodule "iapyc"]
-	path = iapyc
+	path = modules/iapyc
 	url = git@github.com:CYTMWIA/iapyc.git
