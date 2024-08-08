@@ -9,6 +9,8 @@ services:
       - USER_GID=1000
       - SSH_PORT={{ssh_port}} # Display
       - SSH_LISTEN_PORT=22
+      {% if http_proxy is not none %}- http_proxy={{http_proxy}}{% endif %}
+      {% if http_proxy is not none %}- https_proxy={{http_proxy}}{% endif %}
     restart: unless-stopped
     volumes:
       {% if dir_data is not none %}- {{dir_data}}:/data{% endif %}

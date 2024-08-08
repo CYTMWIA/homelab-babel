@@ -1,1 +1,1 @@
-from .main import setup
+from .main import setup  # noqa: F401

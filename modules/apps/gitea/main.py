@@ -15,6 +15,7 @@ def setup(
     http_port: str = "3000",
     ssh_port: str = "2222",
     dir_data: None | str = None,
+    http_proxy: None | str = None,
 ):
     directory(path=base_dir, state=DirectoryState.EXISTS)
     docker.compose_down(path=base_dir)
@@ -30,6 +31,7 @@ def setup(
             "http_port": http_port,
             "ssh_port": ssh_port,
             "dir_data": dir_data,
+            "http_proxy": http_proxy,
         },
     )
     docker.compose_up(path=base_dir)
