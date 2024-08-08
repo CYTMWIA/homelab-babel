@@ -7,7 +7,8 @@ services:
     environment:
       - USER_UID=1000
       - USER_GID=1000
-      - SSH_PORT={{ssh_port}}
+      - SSH_PORT={{ssh_port}} # Display
+      - SSH_LISTEN_PORT=22
     restart: unless-stopped
     volumes:
       {% if dir_data is not none %}- {{dir_data}}:/data{% endif %}
