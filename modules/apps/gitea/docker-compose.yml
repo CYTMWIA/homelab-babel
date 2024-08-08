@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  server:
+    # [gitea/gitea Tags | Docker Hub](https://hub.docker.com/r/gitea/gitea/tags)
+    image: gitea/gitea:1.22.1
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - SSH_PORT={{ssh_port}}
+    restart: unless-stopped
+    volumes:
+      {% if dir_data is not none %}- {{dir_data}}:/data{% endif %}
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "{{http_port}}:3000"
+      - "{{ssh_port}}:22"
+  
+  # runner:
+  #   # [gitea/act_runner Tags | Docker Hub](https://hub.docker.com/r/gitea/act_runner/tags)
+  #   image: gitea/act_runner:nightly
+  #   environment:
+  #     CONFIG_FILE: /config.yaml
+  #     GITEA_INSTANCE_URL: "${INSTANCE_URL}"
+  #     GITEA_RUNNER_REGISTRATION_TOKEN: "${REGISTRATION_TOKEN}"
+  #     GITEA_RUNNER_NAME: "${RUNNER_NAME}"
+  #     GITEA_RUNNER_LABELS: "${RUNNER_LABELS}"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
