@@ -1,9 +1,10 @@
-from modules.core import Host, operation
-from modules.package_manager import pacman
-from modules.systemd import service, ServiceState
-from modules.template import template
-from modules import fs
 import os
+
+from iapyc import fs
+from iapyc.core import Host, operation
+from iapyc.package_manager import pacman
+from iapyc.systemd import ServiceState, service
+from iapyc.template import template
 
 
 @operation
@@ -60,6 +61,12 @@ def run(host: Host, image: str, name: str, args: None | list[str] = None):
 def compose_up(host: Host, path: str):
     setup()
     host.sudo(f"cd {path} && docker compose up -d")
+
+
+@operation
+def compose_down(host: Host, path: str, raise_for_failure=False):
+    setup()
+    host.sudo(f"cd {path} && docker compose down", raise_for_failure=raise_for_failure)
 
 
 @operation
