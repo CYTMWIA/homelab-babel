@@ -1,11 +1,10 @@
-from modules.core import Host, operation
-from modules.package_manager import yay
-from modules.systemd import service, ServiceState
-from modules import docker
-from modules.core import Host, operation
-from modules.fs import DirectoryState, directory
-from modules.template import template
 import os
+
+from iapyc.core import Host, operation
+from iapyc.fs import DirectoryState, directory
+from iapyc.template import template
+
+from modules import docker
 
 
 @operation

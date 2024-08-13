@@ -1,6 +1,5 @@
 from modules.apps import mihomo
-from modules.core import host, Host
-from modules.fs import directory, DirectoryState
+from iapyc.core import host, Host
 
 h: Host = host("tabris")
 with h:

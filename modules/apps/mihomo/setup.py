@@ -1,11 +1,10 @@
 import requests
+from iapyc import fs
+from iapyc.core import Host, operation
+from iapyc.package_manager import yay
+from iapyc.systemd import ServiceState, service
 from yaml import dump as _dump
 from yaml import load as _load
-
-from modules.core import Host, operation
-from modules.package_manager import yay
-from modules.systemd import ServiceState, service
-from modules import fs
 
 try:
     from yaml import CDumper as Dumper
