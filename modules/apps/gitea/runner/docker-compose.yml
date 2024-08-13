@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  runner:
+    # [gitea/act_runner Tags | Docker Hub](https://hub.docker.com/r/gitea/act_runner/tags)
+    image: gitea/act_runner:nightly
+    environment:
+      CONFIG_FILE: /config.yaml
+      GITEA_INSTANCE_URL: "{{instance_url}}"
+      GITEA_RUNNER_REGISTRATION_TOKEN: "{{registration_token}}"
+      GITEA_RUNNER_NAME: "{{runner_name}}"
+    volumes:
+      - {{base_dir}}/config.yaml:/config.yaml
+      - {{base_dir}}/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
