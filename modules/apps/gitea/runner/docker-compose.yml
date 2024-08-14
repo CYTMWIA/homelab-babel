@@ -4,6 +4,7 @@ services:
   runner:
     # [gitea/act_runner Tags | Docker Hub](https://hub.docker.com/r/gitea/act_runner/tags)
     image: gitea/act_runner:nightly
+    restart: unless-stopped
     environment:
       CONFIG_FILE: /config.yaml
       GITEA_INSTANCE_URL: "{{instance_url}}"
