@@ -41,7 +41,7 @@ runner:
 
 cache:
   # Enable cache server to use actions/cache.
-  enabled: true
+  enabled: false
   # The directory to store the cache data.
   # If it's empty, the cache data will be stored in $HOME/.cache/actcache.
   dir: ""
