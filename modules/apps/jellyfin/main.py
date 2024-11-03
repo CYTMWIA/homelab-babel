@@ -1,9 +1,9 @@
 import os
 
 from modules import docker
-from modules.core import Host, operation
-from modules.fs import DirectoryState, directory
-from modules.template import template
+from iapyc.core import Host, operation
+from iapyc.fs import DirectoryState, directory
+from iapyc.template import template
 
 
 @operation

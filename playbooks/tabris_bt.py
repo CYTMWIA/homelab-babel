@@ -1,5 +1,5 @@
 from modules.apps import qbittorrent, jellyfin, peerbanhelper
-from modules.core import host, Host
+from iapyc.core import host, Host
 
 h: Host = host("tabris")
 with h:
