@@ -2,7 +2,7 @@ version: "3.9"
 services:
   peerbanhelper:
     # https://github.com/PBH-BTN/PeerBanHelper/releases/latest
-    image: registry.cn-hangzhou.aliyuncs.com/ghostchu/peerbanhelper:v5.1.0
+    image: registry.cn-hangzhou.aliyuncs.com/ghostchu/peerbanhelper:v7.0.1
     restart: unless-stopped
     container_name: {{container_name}}
     volumes:
