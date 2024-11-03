@@ -1,0 +1,17 @@
+[project]
+name = "homelab-babel"
+version = "0.1.0"
+description = "巴别塔"
+authors = [
+    {name = "CYTMWIA"},
+]
+dependencies = [
+    "iapyc",
+    "requests>=2.32.3",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+[tool.uv.sources]
+iapyc = { path = "modules/iapyc", editable = true }
