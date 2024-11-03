@@ -1,7 +1,1 @@
-{
-    "proxies": {
-        "http-proxy": "{{docker_http_proxy}}",
-        "https-proxy": "{{docker_http_proxy}}",
-        "no-proxy": "127.0.0.0/8"
-    }
-}
+{{json_str}}

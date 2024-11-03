@@ -1,3 +1,4 @@
+import json
 import os
 
 from iapyc import fs
@@ -29,23 +30,31 @@ def setup(host: Host):
             state=ServiceState.ENABLE | ServiceState.START,
         )
 
+    docker_daemon_json = {}
     docker_http_proxy = host.get_var("docker_http_proxy")
     if docker_http_proxy is not None:
-        # TODO: 检查是否已设置代理
+        docker_daemon_json["proxies"] = {
+            "http-proxy": docker_http_proxy,
+            "https-proxy": docker_http_proxy,
+            "no-proxy": "127.0.0.0/8",
+        }
         print("Set proxy for docker:", docker_http_proxy)
-        this_dir = os.path.dirname(__file__)
-        fs.directory(path="/etc/docker/", state=fs.DirectoryState.EXISTS)
-        template(
-            local_template_path=os.path.join(this_dir, "daemon.json"),
-            remote_dest_path="/etc/docker/daemon.json",
-            template_vars={
-                "docker_http_proxy": docker_http_proxy,
-            },
-        )
-        service(
-            service="docker.service",
-            state=ServiceState.RESTART,
-        )
+
+    # TODO: 比较原有 daemon.json
+
+    this_dir = os.path.dirname(__file__)
+    fs.directory(path="/etc/docker/", state=fs.DirectoryState.EXISTS)
+    template(
+        local_template_path=os.path.join(this_dir, "daemon.json"),
+        remote_dest_path="/etc/docker/daemon.json",
+        template_vars={
+            "json_str": json.dumps(docker_daemon_json, indent=4),
+        },
+    )
+    service(
+        service="docker.service",
+        state=ServiceState.RESTART,
+    )
 
 
 @operation
